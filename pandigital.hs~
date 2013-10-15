@@ -44,7 +44,7 @@ isPandigital num
           x     = num2DigitsR num
 
 goodCandidates :: (Integral a) => [a]
-goodCandidates = filter hasUniqueNonZeroDigits $ filter hasFirstDigit9 [1..10000]
+goodCandidates = filter hasUniqueNonZeroDigits $ filter hasFirstDigit9 $ filter (<10000) [1..]
 
 digits2Num :: (Integral a) => [a] -> a
 digits2Num l = foldl' f 0 l
