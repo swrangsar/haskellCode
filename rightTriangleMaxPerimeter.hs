@@ -2,7 +2,7 @@ import Data.List
 
 
 rightTriangles :: (Integral a) => [(a,a,a)]
-rightTriangles = [(x,y,z) | x <- [1..500], y <- [x..500], z <- [(y+1)..500], x^2 + y^2 == z^2, x+y+z <= 1000]
+rightTriangles = [(x,y,z) | x <- [1..333], y <- [x..500], z <- [(y+1)..500], x^2 + y^2 == z^2, x+y+z <= 1000]
 
 perimeters :: (Integral a) => [a]
 perimeters = map f rightTriangles
