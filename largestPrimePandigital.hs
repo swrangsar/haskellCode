@@ -1,28 +1,46 @@
+import Data.List
+
+
+
+primes :: (Integral a) => [a]
 primes = 2 : filter isPrime [3,5..]
 
 
+isPrime :: (Integral a) => a -> Bool
 isPrime n = n > 1 &&
               foldr (\p r -> p*p > n || ((n `rem` p) /= 0 && r))
                 True primes
 
 
-digits :: (Integral a) => a -> [a]
-digits x
+digitsOf :: (Integral a) => a -> [a]
+digitsOf x
     | quot == 0 = x:[]
-    | otherwise	= rem:(digits quot)
+    | otherwise	= rem:(digitsOf quot)
     where quot = x `div` 10
           rem  = x `mod` 10
 
 
-hasUniqueNonZeroDigits :: (Integral a) => [a] -> Bool
-hasUniqueNonZeroDigits [] = True
-hasUniqueNonZeroDigits list@(x:xs)
-    | length list > 9   = False
-    | elem 0 list       = False
-    | otherwise         = (x `notElem` xs) && (hasUniqueNonZeroDigits xs)
+      
+
+      
+{-- added on oct 24th 2013 --}
 
 isPandigital :: (Integral a) => a -> Bool
-isPandigital n = hasUniqueNonZeroDigits $ digits n
+isPandigital num
+    | length x >= 8  = False
+    | check         = True
+    | otherwise     = False
+    where check = (sum x == floor (l * (l+1) / 2)) && (product x == product [1..len])
+          x     = digitsOf num
+          l     = fromIntegral $ length x
+          len   = floor $ l
+
+pandigitalPrimes :: (Integral a) => [a]
+pandigitalPrimes = filter isPrime $ filter isPandigital $ [7777773,7777771..23]
 
 
-largestPrimePandigital = maximum $ filter isPandigital $ filter (< 987654321) primes
+largestPrimePandigital :: (Integral a) => a
+largestPrimePandigital = pandigitalPrimes !! 0
+
+{--note solution is 7652413, 7642513, ...--}
+
