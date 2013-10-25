@@ -21,7 +21,6 @@ digitsOf x
 
 
       
-
       
 {-- added on oct 24th 2013 --}
 
@@ -39,8 +38,9 @@ pandigitalPrimes :: (Integral a) => [a]
 pandigitalPrimes = filter isPrime $ filter isPandigital $ [7777773,7777771..23]
 
 
+
+
 largestPrimePandigital :: (Integral a) => a
 largestPrimePandigital = pandigitalPrimes !! 0
 
 {--note solution is 7652413, 7642513, ...--}
-
