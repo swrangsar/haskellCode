@@ -16,4 +16,4 @@ newtonsMethod x n
 squareRoot :: (RealFrac a) => a -> a
 squareRoot n = newtonsMethod y n
                 where x = truncate n
-                      y = fromIntegral . (2^) . ceiling . (/2) . toRational $ numbits(x)       
+                      y = fromIntegral.(2^).ceiling.(/2).toRational $ numbits(x)       
