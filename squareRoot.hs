@@ -1,4 +1,4 @@
--- using Newton's method and using the nearest power of 2 --
+-- using Newton's method and using the nearest greater power of 2 --
 
 numbits :: (Integral a) => a -> a
 numbits n
@@ -16,5 +16,4 @@ newtonsMethod x n
 squareRoot :: (RealFrac a) => a -> a
 squareRoot n = newtonsMethod y n
                 where x = truncate n
-                      y = fromIntegral $ (2^) $ ceiling $ (toRational $ numbits(x)) / 2
-                
+                      y = (fromIntegral.(2^).ceiling) $ (toRational $ numbits(x)) / 2        
