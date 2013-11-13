@@ -1,13 +1,3 @@
-import Data.List
-
-
-primes :: (Integral a) => [a]
-primes = 2 : filter isPrime [3,5..]
-
-isPrime :: (Integral a) => a -> Bool
-isPrime n = n > 1 &&
-              foldr (\p r -> p*p > n || ((n `rem` p) /= 0 && r))
-                True primes
 
 {-- got the prime list --}
 
@@ -18,22 +8,47 @@ num2DigitsR x
     where quot = x `div` 10
           rem  = x `mod` 10
 
-isPandigital :: (Integral a) => a -> Bool
-isPandigital num
-    | length x /= 10 = False
-    | check          = True
-    | otherwise      = False
-    where check = (sum x == 45) && (product y == product [1..9])
-          x     = num2DigitsR num
-          y     = filter (>0) x
-          
 
-isSubstringDivisible :: (Integral a) => a -> Bool
-isSubstringDivisible n = foldr1 (&&) $ zipWith isDiv substrings primeDivisors
-    where substrings = map (`mod` 1000) $ map (n `div`) $ map (10^)[0..6]
-          primeDivisors = reverse $ take 7 primes
-          isDiv = \x y -> if (x `mod` y) == 0 then True else False
-          
 
-substringDivPandigitals :: (Integral a) => [a]
-substringDivPandigitals = filter isPandigital $ filter isSubstringDivisible [1023456789,1023456797..9876543210]
+listHasUniqueDigits :: (Integral a) => [a] -> Bool
+listHasUniqueDigits [] = True
+listHasUniqueDigits list@(x:xs) = (x `notElem` xs) && (listHasUniqueDigits xs)
+
+hasUniqueDigits :: (Integral a) => a -> Bool
+hasUniqueDigits n = listHasUniqueDigits $ num2DigitsR n
+
+          
+          
+          
+{-- new thought nov 13 --}
+
+threeDigitDivisibles :: (Integral a) => a -> [a]
+threeDigitDivisibles n = filter hasUniqueThree $ filter (>10) $ takeWhile (<1000) $ map (n*) [1..500]
+
+hasUniqueThree :: (Integral a) => a -> Bool
+hasUniqueThree n
+    | a == b    = False
+    | b == c    = False
+    | c == a    = False
+    | otherwise = True
+    where [a,b,c] = map (`mod` 10) $ zipWith div (take 3 $ repeat n) (map (10^) [0..2])
+    
+    
+canBeCombined :: (Integral a) => a -> a -> Bool
+canBeCombined a b = (mod a 100) == (div b 10)
+
+fourDigits = filter hasUniqueDigits $ [((div a 100)* 1000 + b) | a <- threeDigitDivisibles 13, b <- threeDigitDivisibles 17, canBeCombined a b]
+fiveDigits = filter hasUniqueDigits $ [((div a 100)* 10000 + b) | a <- threeDigitDivisibles 11, b <- fourDigits, (mod a 100) == (div b 100)]
+sixDigits = filter hasUniqueDigits $ [((div a 100)* 100000 + b) | a <- threeDigitDivisibles 7, b <- fiveDigits, (mod a 100) == (div b 1000)]
+sevenDigits = filter hasUniqueDigits $ [((div a 100)* 1000000 + b) | a <- threeDigitDivisibles 5, b <- sixDigits, (mod a 100) == (div b 10000)]
+eightDigits = filter hasUniqueDigits $ [((div a 100)* 10000000 + b) | a <- threeDigitDivisibles 3, b <- sevenDigits, (mod a 100) == (div b 100000)]
+nineDigits = filter hasUniqueDigits $ [((div a 100)* 100000000 + b) | a <- threeDigitDivisibles 2, b <- eightDigits, (mod a 100) == (div b 1000000)]
+tenDigits = filter hasUniqueDigits $ [(a*1000000000 + b) | a <- [1..9], b <- nineDigits]
+
+finalResult = sum tenDigits
+
+
+
+
+
+
