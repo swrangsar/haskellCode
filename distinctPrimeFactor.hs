@@ -44,7 +44,7 @@ has4Consec n
 
 
 primeFactorCount :: (Integral a) => a -> Int
-primeFactorCount n = length $ filter (== 0) $ map (mod n) $ takeWhile (\p -> p*p <= n) primes
+primeFactorCount n = length $ filter (== 0) $ map (mod n) $ takeWhile (\p -> p < n) primes
 
 candidates = filter has4Consec $ filter (not.isPrime) [1..]
 
