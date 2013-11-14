@@ -7,6 +7,7 @@ isPrime n = n > 1 &&
               foldr (\p s -> p*p > n || ((n `mod` p) /= 0 && s))
                 True primes
 
+{--
 factorOut :: (Integral a) => a -> a -> a               
 factorOut n p
     | (mod n p) == 0    = factorOut n' p
@@ -27,10 +28,10 @@ primeFactors n = primeFactorWorker n 0
 
 distinctPrimeFactorCount :: (Integral a) => a -> Int
 distinctPrimeFactorCount n = length $ primeFactors n
-
+--}
 
 has4PrimeFactors :: (Integral a) => a -> Bool
-has4PrimeFactors n = 4 == distinctPrimeFactorCount n
+has4PrimeFactors n = (primeFactorCount n == 4)
 
 
 has4Consec :: (Integral a) => a -> Bool
@@ -42,6 +43,8 @@ has4Consec n
     | otherwise                         = True
 
 
+primeFactorCount :: (Integral a) => a -> Int
+primeFactorCount n = length $ filter (== 0) $ map (mod n) $ takeWhile (\p -> p*p <= n) primes
 
 candidates = filter has4Consec $ filter (not.isPrime) [1..]
 
