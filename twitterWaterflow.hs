@@ -1,4 +1,7 @@
-{-- ideas from http://philipnilsson.github.io/Badness10k/articles/waterflow/ [accessed oct,2013] --}
+{-- ideas from 
+    http://qandwhat.apps.runkite.com/i-failed-a-twitter-interview/
+    http://philipnilsson.github.io/Badness10k/articles/waterflow/ [accessed oct,2013] 
+    the twitter waterflow problem --}
 
 waterFlow :: (Integral a) => [a] -> a
 waterFlow [] = 0
