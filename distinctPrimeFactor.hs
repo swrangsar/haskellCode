@@ -16,21 +16,18 @@ factorOut n p
     where n' = div n p
   
                              
-primeFactorR :: (Integral a) => a -> Int -> a -> a
+primeFactorR :: (Integral a) => a -> Int -> a
 primeFactorR n index
-    | p > n || count > 5    = 0
-    | (n `mod` p) == 0      = 1 + (primeFactorR n' (index+1)) 
+    | n==1                  = 0
+    | p*p > n               = 1
+    | (n `mod` p) == 0      = 1 + (primeFactorR n' (index+1))
     | otherwise             = primeFactorR n (index+1)
     where p         = primes !! index
           n'        = factorOut n p
-          
-
-primeFactors :: (Integral a) => a -> [a]
-primeFactors n = primeFactorR n 0 0
 
 
-primeFactorCount :: (Integral a) => a -> Int
-primeFactorCount n = length $ primeFactors n
+primeFactorCount :: (Integral a) => a -> a
+primeFactorCount n = primeFactorR n 0
 
 
 has4PrimeFactors :: (Integral a) => a -> Bool
@@ -46,11 +43,10 @@ has4Consec n
     | otherwise                         = True
 
 
-{--
-primeFactorCount :: (Integral a) => a -> Int
-primeFactorCount n = length $ filter (== 0) $ map (mod n) $ takeWhile (\p -> 2*p <= n) primes
---}
+
 
 candidates = filter has4Consec $ filter (not.isPrime) [100..]
+
+-- candidates = [(a,b,c) | a <- has4Candidates, b <- tail has4Candidates, c <- tail (tail has4Candidates), (a+1) == b, (b+1) == c]
 
 
