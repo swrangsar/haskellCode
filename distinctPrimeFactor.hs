@@ -15,17 +15,17 @@ factorOut n p
     where n' = div n p
 --}   
                              
-primeFactorWorker :: (Integral a) => a -> Int -> [a]
-primeFactorWorker n index
-    | p > n                 = []
-    | (n `mod` p) == 0      = p:primeFactorWorker n' (index+1)
-    | otherwise             = primeFactorWorker n (index+1)
+primeFactorWorker :: (Integral a) => a -> Int  -> a -> [a]
+primeFactorWorker n index count
+    | p > n || count > 5    = []
+    | (n `mod` p) == 0      = p:primeFactorWorker n' (index+1) (count+1)
+    | otherwise             = primeFactorWorker n (index+1) count
     where p         = primes !! index
           n'        = div n p
           
 
 primeFactors :: (Integral a) => a -> [a]
-primeFactors n = primeFactorWorker n 0
+primeFactors n = primeFactorWorker n 0 0
 
 distinctPrimeFactorCount :: (Integral a) => a -> Int
 distinctPrimeFactorCount n = length $ primeFactors n
