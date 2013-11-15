@@ -34,21 +34,9 @@ has4PrimeFactors :: (Integral a) => a -> Bool
 has4PrimeFactors n = (primeFactorCount n == 4)
 
 
-has4Consec :: (Integral a) => a -> Bool
-has4Consec n
-    | (not.has4PrimeFactors) n          = False
-    | (not.has4PrimeFactors) (n+1)      = False
-    | (not.has4PrimeFactors) (n+2)      = False
-    | (not.has4PrimeFactors) (n+3)      = False
-    | otherwise                         = True
-
-
 
 
 has4Candidates = filter has4PrimeFactors $ filter (not.isPrime) [100..]
 
 has4Trips = filter (\(a,b,c) -> ((b-a) == 1) && ((c-b)==1)) $ zipWith3 (,,) has4Candidates (tail has4Candidates) (tail $ tail has4Candidates)
-
--- candidates = [(a,b,c) | a <- has4Candidates, b <- tail has4Candidates, c <- tail (tail has4Candidates), (a+1) == b, (b+1) == c]
-
 
