@@ -1,3 +1,16 @@
+primes :: (Integral a) => [a]
+primes = 2:filter isPrime [3,5..]
+
+
+isPrime :: (Integral a) => a -> Bool
+isPrime n = n > 1 &&
+              foldr (\p s -> p*p > n || ((n `mod` p) /= 0 && s))
+                True primes
+
+
+
+
+
 reduceEven :: (Integral a) => a -> a -> (a,a)
 reduceEven d s
     | even d    = reduceEven d' (s+1)
@@ -34,3 +47,10 @@ pseudoPrimeTest t s n
     | otherwise             = pseudoPrimeTest t' s' n
     where t' = mod (t*t) n
           s' = s-1
+          
+
+isRabinMillerPseudoPrime :: (Integral a) => a -> Bool
+isRabinMillerPseudoPrime 1 = False
+isRabinMillerPseudoPrime n =
+    let ps = takeWhile (<100) primes
+    in n `elem` ps || all (isPseudoPrimeForBase n) ps
