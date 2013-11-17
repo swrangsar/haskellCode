@@ -16,7 +16,7 @@ isPrime n = n > 1 &&
 
 modularExpo :: (Integral a) => a -> a -> a -> a
 modularExpo b e m =
-    let times x y m = mod (x*y) m
+    let times x y   = mod (x*y) m
         powrec b e r
             | e == 0    = r
             | even e    = powrec (times b b) (div e 2) r
