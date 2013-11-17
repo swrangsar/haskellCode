@@ -1,3 +1,5 @@
+-- the naive prime section --
+
 primes :: (Integral a) => [a]
 primes = 2:filter isPrime [3,5..]
 
@@ -10,6 +12,18 @@ isPrime n = n > 1 &&
 
 
 
+{-- the rabin Miller prime section --}
+
+modularExpo :: (Integral a) => a -> a -> a -> a
+modularExpo b e m =
+    let times x y m = mod (x*y) m
+        powrec b e r
+            | e == 0    = r
+            | even e    = powrec (times b b) (div e 2) r
+            | otherwise = powrec (times b b) (div e 2) (times b r)
+    in  powrec b e 1
+
+
 
 reduceEven :: (Integral a) => a -> a -> (a,a)
 reduceEven d s
@@ -17,21 +31,6 @@ reduceEven d s
     | otherwise = (d,s)
     where d' = div d 2
     
-
-modularExpoR :: (Integral a) => a -> a -> a -> a -> a
-modularExpoR _ 0 _ r = r
-modularExpoR b e m r
-    | even e       = modularExpoR b' e' m r
-    | (not.even) e = modularExpoR b (e-1) m r'
-    where b'    = mod (b*b) m
-          e'    = div e 2
-          r'    = mod (r*b) m
-          
-          
-modularExpo :: (Integral a) => a -> a -> a -> a
-modularExpo _ 0 _ = 1
-modularExpo b 1 m = mod b m
-modularExpo b e m = modularExpoR b e m 1
 
 
 isPseudoPrimeForBase :: (Integral a) => a -> a -> Bool
@@ -54,3 +53,7 @@ isRabinMillerPseudoPrime 1 = False
 isRabinMillerPseudoPrime n =
     let ps = takeWhile (<100) primes
     in n `elem` ps || all (isPseudoPrimeForBase n) ps
+
+
+
+
