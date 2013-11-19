@@ -1,4 +1,8 @@
 -- the naive prime section --
+module RabinMiller
+( isRabinMillerPseudoPrime
+) where
+
 
 primes :: (Integral a) => [a]
 primes = 2:filter isPrime [3,5..]
