@@ -8,7 +8,7 @@ isCombMil n r
     where   r'      = min r (n-r)
             nums    = [(n-r'+1)..n]
             dens    = [1..r']
-            comb    = ceiling $ product nums / product dens       
+            comb    = product nums `div` product dens       
 
 
 numOfCombMils :: (Integral a) => a -> a
