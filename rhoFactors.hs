@@ -13,9 +13,9 @@ rhoFactor n c = fact 2 2
               | d == n      = rhoFactor n (c+1)
               | isPrime d   = d   
               | otherwise   = rhoFactor d (c+1)
-                where   t'  = f t
-                        h'  = f $ f h
-                        d   = gcd (t'-h') n
+              where t'  = f t
+                    h'  = f $ f h
+                    d   = gcd (t'-h') n
 
 rhoFactors :: (Integral a) => a -> [a]
 rhoFactors n = sort $ facts n
