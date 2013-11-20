@@ -3,12 +3,12 @@ isCombMil _ 0 = False
 isCombMil _ 1 = False
 isCombMil n r
     | (n-r) < 2         = False
-    | comb > 1e6        = True
+    | comb > 1000000    = True
     | otherwise         = False
     where   r'      = min r (n-r)
             nums    = [(n-r'+1)..n]
             dens    = [1..r']
-            comb    = product nums / product dens       
+            comb    = ceiling $ product nums / product dens       
 
 
 numOfCombMils :: (Integral a) => a -> a
