@@ -10,7 +10,9 @@ cardValue 'A'  = 14
 cardValue c    = digitToInt c
 
 
---handPairs :: String -> [(String, String)]
+type Hand = [(Int, Char)]
+
+handPairs :: String -> [(Hand, Hand)]
 handPairs s = map split $ map words $ lines s
     where cardTuple (v:s:[])   = (cardValue v, s)
           split xs  = (take 5 ys, drop 5 ys)
@@ -23,51 +25,59 @@ main = do
     
 
 {--
-handValue :: [(Int,Char)] -> Int
+handValue :: Hand -> Int
 handValue h
     where simVals   = (5-) $ length $ nubBy (\a b -> fst a == fst b) h
 --}
 
-onePair :: [(Int, Char)] -> Bool
+nubFst :: [a] -> [a]
+nubFst = nubBy (\a b -> fst a == fst b)
+
+
+onePair :: Hand -> Bool
 onePair h = 4 == count
-    where count = (5-) $ length $ nubBy (\a b -> fst a == fst b) h
+    where count = (5-) $ length $ nubFst h
     
-twoPair :: [(Int, Char)] -> Bool
+twoPair :: Hand -> Bool
 twoPair h = (3 == count) && (2 == count2)
-    where notSimVals    = nubBy (\a b -> fst a == fst b) h
+    where notSimVals    = nubFst h
           count         = (5-) $ length notSimVals
-          count2        = length $ nubBy (\a b -> fst a == fst b) $ h `minus` notSimVals
+          count2        = length $ nubFst $ h `minus` notSimVals
 
-threeKind :: [(Int, Char)] -> Bool
+threeKind :: Hand -> Bool
 threeKind h = (3 == count) && (1 == count2)
-    where notSimVals    = nubBy (\a b -> fst a == fst b) h
+    where notSimVals    = nubFst h
           count         = (5-) $ length notSimVals
-          count2        = length $ nubBy (\a b -> fst a == fst b) $ h `minus` notSimVals
+          count2        = length $ nubFst $ h `minus` notSimVals
 
 
-straight :: [(Int, Char)] -> Bool
+straight :: Hand -> Bool
 straight h = all (==1) $ zipWith (-) (tail vals) vals
     where vals = sort $ map fst h
 
-flush :: [(Int, Char)] -> Bool
+flush :: Hand -> Bool
 flush h = all (==x) xs
     where suits     = map snd h
           (x:xs)    = suits
 
-fullHouse :: [(Int, Char)] -> Bool
+fullHouse :: Hand -> Bool
 fullHouse h = (2 == count) && (2 == count2)
-    where notSimVals    = nubBy (\a b -> fst a == fst b) h
+    where notSimVals    = nubFst h
           count         = (5-) $ length notSimVals
-          count2        = length $ nubBy (\a b -> fst a == fst b) $ h `minus` notSimVals
+          count2        = length $ nubFst $ h `minus` notSimVals
 
-fourKind :: [(Int, Char)] -> Bool
+fourKind :: Hand -> Bool
 fourKind h = (2 == count) && (1 == count2)
-    where notSimVals    = nubBy (\a b -> fst a == fst b) h
+    where notSimVals    = nubFst h
           count         = (5-) $ length notSimVals
-          count2        = length $ nubBy (\a b -> fst a == fst b) $ h `minus` notSimVals
+          count2        = length $ nubFst $ h `minus` notSimVals
 
 
+stFlush :: Hand -> Bool
+stFlush h = (flush h) && (straight h)
 
+royalFlush :: Hand -> Bool
+royalFlush h = (flush h) && (all (>9) $ map fst h)
 
 
 
