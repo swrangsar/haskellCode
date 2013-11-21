@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-commaSepValues :: String -> [String]
-commaSepValues s = case dropWhile (==',') s of
-                        "" -> []
-                        s' -> w : commaSepValues s''
-                            where (w, s'') = break (==',') s'
-=======
 import Data.Char
 
 
@@ -33,4 +26,12 @@ codedNumbers s =  map word2num $ codedWords s
 
 requiredCount :: String -> Int
 requiredCount s = length $ filter id $ map isTriangle $ codedNumbers s
->>>>>>> 27a37ff74ca89c11b68d54001f8f6f2691fdbe07
+
+
+
+
+commaSepValues :: String -> [String]
+commaSepValues s = case dropWhile (==',') s of
+                        "" -> []
+                        s' -> w : commaSepValues s''
+                            where (w, s'') = break (==',') s'
