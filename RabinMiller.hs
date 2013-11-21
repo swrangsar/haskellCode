@@ -56,7 +56,7 @@ pseudoPrimeTest t s n
 isRabinMillerPseudoPrime :: (Integral a) => a -> Bool
 isRabinMillerPseudoPrime 1 = False
 isRabinMillerPseudoPrime n =
-    let ps = takeWhile (<100) primes
+    let ps = 1662803:takeWhile (<100) primes
     in n `elem` ps || all (isPseudoPrimeForBase n) ps
 
 
