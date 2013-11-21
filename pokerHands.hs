@@ -1,4 +1,5 @@
 import Data.Char (digitToInt)
+import Data.List
 
 
 cardValue :: Char -> Int
@@ -17,38 +18,30 @@ handPairs s = map split $ map words $ lines s
     where cardTuple (v:s:[])   = (cardValue v, s)
           split xs  = (take 5 ys, drop 5 ys)
               where ys = map cardTuple xs
+
               
 main = do
     s <- readFile "poker.txt"
-    putStrLn $ show $ handPairs s
+    putStrLn $ show $ length $ filter id $ map fstPlayerWins $ handPairs s
     return ()
     
 
-{--
-handValue :: Hand -> Int
-handValue h
-    where simVals   = (5-) $ length $ nubBy (\a b -> fst a == fst b) h
---}
 
-nubFst :: [a] -> [a]
-nubFst = nubBy (\a b -> fst a == fst b)
+
+
+freq :: Ord a => [a] -> [Int]
+freq l = map snd $ map (\x -> (head x, length x)) $ group $ sort l
 
 
 onePair :: Hand -> Bool
-onePair h = 4 == count
-    where count = (5-) $ length $ nubFst h
+onePair h = any (>1) $ freq $ map fst h
     
 twoPair :: Hand -> Bool
-twoPair h = (3 == count) && (2 == count2)
-    where notSimVals    = nubFst h
-          count         = (5-) $ length notSimVals
-          count2        = length $ nubFst $ h `minus` notSimVals
-
+twoPair h =  (>1) $ length $ filter (>1) $ freq $ map fst h
+    
+    
 threeKind :: Hand -> Bool
-threeKind h = (3 == count) && (1 == count2)
-    where notSimVals    = nubFst h
-          count         = (5-) $ length notSimVals
-          count2        = length $ nubFst $ h `minus` notSimVals
+threeKind h = any (>2) $ freq $ map fst h
 
 
 straight :: Hand -> Bool
@@ -61,23 +54,45 @@ flush h = all (==x) xs
           (x:xs)    = suits
 
 fullHouse :: Hand -> Bool
-fullHouse h = (2 == count) && (2 == count2)
-    where notSimVals    = nubFst h
-          count         = (5-) $ length notSimVals
-          count2        = length $ nubFst $ h `minus` notSimVals
+fullHouse h = all (>1) $ freq $ map fst h
 
 fourKind :: Hand -> Bool
-fourKind h = (2 == count) && (1 == count2)
-    where notSimVals    = nubFst h
-          count         = (5-) $ length notSimVals
-          count2        = length $ nubFst $ h `minus` notSimVals
-
+fourKind h = any (>3) $ freq $ map fst h
 
 stFlush :: Hand -> Bool
 stFlush h = (flush h) && (straight h)
 
 royalFlush :: Hand -> Bool
 royalFlush h = (flush h) && (all (>9) $ map fst h)
+
+handValue :: Hand -> Int
+handValue h
+    | royalFlush h      = 10
+    | stFlush h         = 9
+    | fourKind h        = 8
+    | fullHouse h       = 7
+    | flush h           = 6
+    | straight h        = 5
+    | threeKind h       = 4
+    | twoPair h         = 3
+    | onePair h         = 2
+    | otherwise         = 1
+
+
+
+fstPlayerWins :: (Hand, Hand) -> Bool
+fstPlayerWins (g, h)
+    | a > b     = True
+    | a == b    = compPrimal g h
+    | otherwise = False
+    where a = handValue g
+          b = handValue h
+          uniqFsts l        = map fst $ reverse $ sortBy (\x y -> compare (snd x) (snd y))$ map (\x -> (head x, length x)) $ (group.sort) $ map fst l
+          compPrimal x y = (s > t)
+              where s = uniqFsts x
+                    t = uniqFsts y
+                    
+                    
 
 
 
