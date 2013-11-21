@@ -12,16 +12,16 @@ innerConv n = irec (2,1) 1
             | r <= n    = x:irec y (r+1)
             | otherwise = []
             where (a,b)     = x
-                  y         = addFrac (2,1) (b,a)
+                  y         = addFrac 2 (b,a)
 
 squareRootConv :: (Integral a) => (a,a) -> (a,a)
-squareRootConv (a,b) = addFrac (1,1) (b,a)
+squareRootConv (a,b) = addFrac 1 (b,a)
 
 
-addFrac :: (Integral a) => (a,a) -> (a,a) -> (a,a)
-addFrac (a,b) (c,d) = (m,n)
-    where xs    = rhoFacts $ a*d + b*c
-          ys    = rhoFacts $ b*d
+addFrac :: (Integral a) => a -> (a,a) -> (a,a)
+addFrac a (c,d) = (m,n)
+    where xs    = rhoFacts $ a*d + c
+          ys    = rhoFacts $ d
           cs    = intersect xs ys
           m     = product $ 1:(xs \\ cs)
           n     = product $ 1:(ys \\ cs)
