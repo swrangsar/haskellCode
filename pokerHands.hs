@@ -20,13 +20,6 @@ handPairs s = map split $ map words $ lines s
               where ys = map cardTuple xs
 
               
-main = do
-    s <- readFile "poker.txt"
-    putStrLn $ show $ length $ filter id $ map fstPlayerWins $ handPairs s
-    return ()
-    
-
-
 
 
 freq :: Ord a => [a] -> [Int]
@@ -94,6 +87,10 @@ fstPlayerWins (g, h)
                     
                     
 
+main = do
+    s <- readFile "poker.txt"
+    putStrLn $ show $ length $ filter id $ map fstPlayerWins $ handPairs s
+    return ()
 
 
 
