@@ -18,7 +18,7 @@ expansions :: (Integral a) => a -> [(a,a)]
 expansions n = frec (3,2) 1
     where frec (a,b) r
             | r < n         = (a,b):frec (c,d) (r+1)
-            | r == n        = (a,b)     
+            | r == n        = (a,b):[]     
             | otherwise     = []
             where c = 2*b + a
                   d = a+b
