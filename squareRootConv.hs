@@ -7,12 +7,6 @@ num2DigitsR x
           rem  = x `mod` 10
 
 
-isBiggerNum :: (Integral a) => (a,a) -> Bool
-isBiggerNum (a,b) = l > k
-    where l         = length $ num2DigitsR a
-          k         = length $ num2DigitsR b
-    
-
 
 expansions :: (Integral a) => a -> [(a,a)]
 expansions n = frec (3,2) 1
@@ -23,6 +17,13 @@ expansions n = frec (3,2) 1
             where c = 2*b + a
                   d = a+b
                   
+
+isBiggerNum :: (Integral a) => (a,a) -> Bool
+isBiggerNum (a,b) = l > k
+    where l         = length $ num2DigitsR a
+          k         = length $ num2DigitsR b
+    
+
                   
                   
                   
