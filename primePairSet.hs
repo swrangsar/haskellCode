@@ -17,10 +17,17 @@ isPrimePair a b = (isPrime x) && (isPrime y)
 primes :: (Integral a) => [a]
 primes = filter isPrime (2:[3,5..])
 
-primeSet p = filter (isPrimePair p) primes
+primes' = takeWhile (< 1250) primes
 
-set3 = filter (isPrimePair 3) primes
-set7 = filter (isPrimePair 7) primes
-set109 = filter (isPrimePair 109) primes
-set673 = filter (isPrimePair 673) primes
-set = intersect (take 100 set673) $ intersect (take 100 set109) $ intersect (take 100 set7) (take 100 set3)
+pset p = filter (isPrimePair p) primes'
+
+
+
+set = [[a,b,c,d,e]| a <- primes', 
+    b <- (takeWhile (< a) primes'),
+    let depth1 = intersect (pset a) (pset b),
+    c <- depth1,
+    d <- (takeWhile (< c) depth1),
+    let depth2 = intersect (filter (isPrimePair c) depth1) (filter (isPrimePair d) depth1),
+    e <- depth2]
+
