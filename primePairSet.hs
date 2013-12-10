@@ -18,28 +18,8 @@ primes :: (Integral a) => [a]
 primes = filter isPrime (2:[3,5..])
 
 
-
-
-sets = [[a,b,c,d,e] | a <- primes,
-    b <- takeWhile (<a) primes,
-    isPrimePair a b,
-    c <- takeWhile (<b) primes,
-    isPrimePair b c,
-    isPrimePair a c,
-    d <- takeWhile (<c) primes,
-    isPrimePair c d,
-    isPrimePair b d,
-    isPrimePair a d,
-    e <- takeWhile (<d) primes,
-    isPrimePair d e,
-    isPrimePair c e,
-    isPrimePair b e,
-    isPrimePair a e]
-
-
-pairs = sort $ nub $ concat $ take 2000 $ [[a,b]| a <- primes, b <- takeWhile (<a) primes, isPrimePair a b]
-
-triplets = sort $ nub $ concat $ [[a,b,c]| a <- pairs, b <- takeWhile (<a) pairs, isPrimePair a b, c <- takeWhile (<b) pairs, isPrimePair b c, isPrimePair a c]
-quartlets = (sort.nub.concat) $ [[a,b,c,d] | a <- triplets, b <- takeWhile (<a) triplets, isPrimePair a b, c <- takeWhile (<b) triplets, isPrimePair b c, isPrimePair a c, d <- takeWhile (<c) triplets, isPrimePair c d, isPrimePair b d, isPrimePair a d]
-pentlets = (sort.nub.concat) $ [[a,b,c,d,e]| a <- quartlets, b <- takeWhile (<a) quartlets, isPrimePair a b, c <- takeWhile (<b) quartlets, isPrimePair a c, isPrimePair b c, d <- takeWhile (<c) quartlets, isPrimePair a d, isPrimePair b d, isPrimePair c d, e <- takeWhile (<d) quartlets, isPrimePair a e, isPrimePair b e, isPrimePair c e, isPrimePair d e]
-
+set3 = filter (isPrimePair 3) primes
+set7 = filter (isPrimePair 7) primes
+set109 = filter (isPrimePair 109) primes
+set673 = filter (isPrimePair 673) primes
+set = intersect set673 $ intersect set109 $ intersect set7 set3
