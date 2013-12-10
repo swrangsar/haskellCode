@@ -17,9 +17,10 @@ isPrimePair a b = (isPrime x) && (isPrime y)
 primes :: (Integral a) => [a]
 primes = filter isPrime (2:[3,5..])
 
+primeSet p = filter (isPrimePair p) primes
 
 set3 = filter (isPrimePair 3) primes
 set7 = filter (isPrimePair 7) primes
 set109 = filter (isPrimePair 109) primes
 set673 = filter (isPrimePair 673) primes
-set = intersect set673 $ intersect set109 $ intersect set7 set3
+set = intersect (take 100 set673) $ intersect (take 100 set109) $ intersect (take 100 set7) (take 100 set3)
