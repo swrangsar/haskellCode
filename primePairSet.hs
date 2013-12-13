@@ -12,7 +12,7 @@ isPrimePair :: Int -> Int -> Bool
 isPrimePair a b = (isPrime x) && (isPrime y)
     where   x = readInt $ show a ++ show b
             y = readInt $ show b ++ show a
-            readInt = read:: String -> Int
+            readInt = read :: String -> Int
 
       
 
@@ -27,7 +27,7 @@ primes' = takeWhile (< 25000) primes
 
 
 
-set = [[a,b,c,d,e] | a <- primes',
+set = [[a,b,c,d,e] | a <- takeWhile (<14000) $ dropWhile (<7) primes',
     let depth1 = filter (isPrimePair a) $ dropWhile (<= a) primes',
     b <- depth1,
     let depth2 = filter (isPrimePair b) $ dropWhile (<= b) depth1,
