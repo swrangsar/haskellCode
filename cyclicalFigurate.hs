@@ -54,7 +54,5 @@ candidates = [[a,b,c,d,e,f] |
     
 isCyclic :: (Integral a) => [a] -> Bool
 isCyclic l = 
-    where   rec (x:[])  = inSet x (head l)
-            rec (x:xs)
-                | inSet x (head xs) = 
+    where   rec (x:xs) 
     
