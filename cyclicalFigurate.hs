@@ -1,4 +1,3 @@
-
 triangles :: (Integral a) => [a]
 triangles = map triangle [1..]
     where triangle n = (n * (n+1)) `div` 2
@@ -29,3 +28,4 @@ octagonals = map octagonal [1..]
 
 
 fourDigits :: (Integral a) => [a] -> [a]
+fourDigits l = takeWhile (< 10000) $ dropWhile (<1000) l
