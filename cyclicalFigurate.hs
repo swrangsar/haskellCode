@@ -28,3 +28,4 @@ octagonals = map octagonal [1..]
     where octagonal n = n * (3*n-2)
 
 
+fourDigits :: (Integral a) => [a] -> [a]
