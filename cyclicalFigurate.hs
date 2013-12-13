@@ -29,3 +29,25 @@ octagonals = map octagonal [1..]
 
 fourDigits :: (Integral a) => [a] -> [a]
 fourDigits l = takeWhile (< 10000) $ dropWhile (<1000) l
+
+
+isPair :: (Integral a) => a -> a -> Bool
+isPair a b = (inSet a b) || (inSet b a)
+    where inSet m n
+            | x == y    = True
+            | otherwise = False
+            where x = mod m 100
+                  y = div n 100
+
+
+candidates = [[a,b,c,d,e,f] | 
+    a <- fourDigits triangles,
+    b <- (filter (isPair a) $ fourDigits squares),
+    c <- (filter (isPair b) $ fourDigits pentagonals),
+    d <- (filter (isPair c) $ fourDigits hexagonals),
+    e <- (filter (isPair d) $ fourDigits heptagonals),
+    f <- (filter (isPair e) $ fourDigits octagonals)]
+    
+    
+    
+    
