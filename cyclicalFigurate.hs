@@ -33,11 +33,14 @@ fourDigits l = takeWhile (< 10000) $ dropWhile (<1000) l
 
 isPair :: (Integral a) => a -> a -> Bool
 isPair a b = (inSet a b) || (inSet b a)
-    where inSet m n
-            | x == y    = True
-            | otherwise = False
-            where x = mod m 100
-                  y = div n 100
+
+
+inSet :: (Integral a) => a -> a -> Bool
+inSet m n
+    | x == y    = True
+    | otherwise = False
+    where x = mod m 100
+          y = div n 100
 
 
 candidates = [[a,b,c,d,e,f] | 
@@ -49,5 +52,9 @@ candidates = [[a,b,c,d,e,f] |
     f <- (filter (isPair e) $ fourDigits octagonals)]
     
     
-    
+isCyclic :: (Integral a) => [a] -> Bool
+isCyclic l = 
+    where   rec (x:[])  = inSet x (head l)
+            rec (x:xs)
+                | inSet x (head xs) = 
     
