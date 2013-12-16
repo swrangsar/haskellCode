@@ -1,29 +1,31 @@
+
+
 triangles :: (Integral a) => [a]
-triangles = map triangle [1..]
+triangles = map (1,) $ fourDigits $ map triangle [1..]
     where triangle n = (n * (n+1)) `div` 2
 
 
 
 squares :: (Integral a) => [a]
-squares = map square [1..]
+squares = map (2,) $ fourDigits $ map square [1..]
     where square n = n * n
 
 pentagonals :: (Integral a) => [a]
-pentagonals = map pentagonal [1..]
+pentagonals = map (3,) $ fourDigits $ map pentagonal [1..]
     where pentagonal n = (n * (3*n-1)) `div` 2
 
 
 hexagonals :: (Integral a) => [a]
-hexagonals = map hexagonal [1..]
+hexagonals = map (4,) $ fourDigits $ map hexagonal [1..]
     where hexagonal n = n * (2*n-1)
     
 heptagonals :: (Integral a) => [a]
-heptagonals = map heptagonal [1..]
+heptagonals = map (5,) $ fourDigits $ map heptagonal [1..]
     where heptagonal n = (n * (5*n-3)) `div` 2
     
 
 octagonals :: (Integral a) => [a]
-octagonals = map octagonal [1..]
+octagonals = map (6,) $ fourDigits $ map octagonal [1..]
     where octagonal n = n * (3*n-2)
 
 
