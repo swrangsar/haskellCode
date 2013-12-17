@@ -10,25 +10,29 @@ num2Digits x
     where quot = x `div` 10
           rem  = x `mod` 10
 
-diglen :: (Integral a) => a -> Int
-diglen x = length $ num2Digits x
 
-cubes :: (Integral a) => [a]
-cubes = map (^3) [1..]
+digits2Num :: (Integral a) => [a] -> a
+digits2Num l = foldr f 0 l
+               where f = \y x -> x*10 + y
 
 
-candidates = [l | a <- cubes,
-    let cubes1 = dropWhile (<= a) cubes,
-    b <- (takeWhile (\x  -> (diglen x) == (diglen a)) cubes1),
-    let cubes2 = dropWhile (<= b) cubes1,
-    c <- (takeWhile (\x  -> (diglen x) == (diglen a)) cubes2),
-    let cubes3 = dropWhile (<= c) cubes2,
-    d <- (takeWhile (\x  -> (diglen x) == (diglen a)) cubes3),
-    let cubes4 = dropWhile (<= d) cubes3,
-    e <- (takeWhile (\x  -> (diglen x) == (diglen a)) cubes4),
+
+cubes :: (Integral a) => [[a]]
+cubes = map num2Digits $ map (^3) [1..]
+
+
+candidates = map (\x -> map digits2Num x) $ [l | a <- cubes,
+    let cubes1 = (tail $ dropWhile (/= a) cubes),
+    let alen = length a,
+    b <- (takeWhile (\x  -> length x == alen) cubes1),
+    let cubes2 = (tail $ dropWhile (/= b) cubes1),
+    c <- (takeWhile (\x  -> length x == alen) cubes2),
+    let cubes3 = (tail $ dropWhile (/= c) cubes2),
+    d <- (takeWhile (\x  -> length x == alen) cubes3),
+    let cubes4 = (tail $ dropWhile (/= d) cubes3),
+    e <- (takeWhile (\x  -> length x == alen) cubes4),
     let l = [a,b,c,d,e],
-    let cs = map num2Digits l,
-    (length $ nub $ map sum cs) == 1,
-    (length $ nub $ map length $ map (filter (==0)) cs) == 1,
-    (length $ nub $ map product $ map (filter (/=0)) cs) == 1
+    (length $ nub $ map sum l) == 1,
+    (length $ nub $ map length $ map (filter (==0)) l) == 1,
+    (length $ nub $ map product $ map (filter (/=0)) l) == 1
     ]
