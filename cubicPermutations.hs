@@ -32,7 +32,7 @@ candidates = map (\x -> map digits2Num x) $ [l | a <- cubes,
     let cubes4 = (tail $ dropWhile (/= d) cubes3),
     e <- (takeWhile (\x  -> length x == alen) cubes4),
     let l = [a,b,c,d,e],
-    (length $ nub $ map sum l) == 1,
     (length $ nub $ map length $ map (filter (==0)) l) == 1,
+    (length $ nub $ map sum l) == 1,
     (length $ nub $ map product $ map (filter (/=0)) l) == 1
     ]
