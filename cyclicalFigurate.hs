@@ -1,12 +1,17 @@
+import Data.List
+
+
+
+
 triangles :: (Integral a) => [a]
 triangles = map triangle [1..]
     where triangle n = (n * (n+1)) `div` 2
 
 
-
 squares :: (Integral a) => [a]
 squares = map square [1..]
     where square n = n * n
+
 
 pentagonals :: (Integral a) => [a]
 pentagonals = map pentagonal [1..]
@@ -17,14 +22,16 @@ hexagonals :: (Integral a) => [a]
 hexagonals = map hexagonal [1..]
     where hexagonal n = n * (2*n-1)
     
+
 heptagonals :: (Integral a) => [a]
 heptagonals = map heptagonal [1..]
     where heptagonal n = (n * (5*n-3)) `div` 2
-    
 
+    
 octagonals :: (Integral a) => [a]
 octagonals = map octagonal [1..]
     where octagonal n = n * (3*n-2)
+
 
 
 fourDigits :: (Integral a) => [a] -> [a]
@@ -43,16 +50,35 @@ inSet m n
           y = div n 100
 
 
-candidates = [[a,b,c,d,e,f] | 
+candidates = [l| 
     a <- fourDigits triangles,
-    b <- (filter (isPair a) $ fourDigits squares),
-    c <- (filter (isPair b) $ fourDigits pentagonals),
-    d <- (filter (isPair c) $ fourDigits hexagonals),
-    e <- (filter (isPair d) $ fourDigits heptagonals),
-    f <- (filter (isPair e) $ fourDigits octagonals)]
+    b <- fourDigits squares,
+    c <- fourDigits pentagonals,
+    d <- fourDigits hexagonals,
+    e <- fourDigits heptagonals,
+    f <- fourDigits octagonals,
+    let l = [a,b,c,d,e,f],
+    isCyclic l]
     
     
 isCyclic :: (Integral a) => [a] -> Bool
-isCyclic l = 
-    where   rec (x:xs) 
-    
+isCyclic l = rec l
+    where   rec s
+                | xs == []      = inSet x (head l)
+                | ys == []      = False
+                | otherwise     = rec (y:xs')
+                where (x:xs)    = s
+                      ys        = filter (inSet x) xs
+                      y         = head ys
+                      xs'       = delete y xs
+                      
+            
+
+
+
+
+
+
+
+
+
