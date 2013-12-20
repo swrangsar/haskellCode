@@ -1,6 +1,6 @@
 import Data.List
 
-
+{-- this is not the most efficient method ! --}
 
 
 num2Digits :: (Integral a) => a -> [a]
