@@ -43,8 +43,9 @@ int main(int argc, char *argv[])
         printf("Main: completed join with thread %ld having a status of %ld\n",t,(long)status);
     }
     
-    printf("Main: program completed. Exiting.\n");
     pthread_mutex_destroy(&philoMutex);
+    
+    printf("Main: program completed. Exiting.\n");
     pthread_exit(NULL);
 }
 
@@ -54,8 +55,10 @@ int main(int argc, char *argv[])
 void *printHello(void *threadid)
 {
     long tid;
+    int count = 0;
     tid = (long)threadid;
-    while (1) {
+    
+    while (count++ < 2) {
         pthread_mutex_lock(&philoMutex);
         printf("Philosopher #%ld picked left fork!\n", tid);
         printf("Philosopher #%ld picked right fork!\n", tid);
