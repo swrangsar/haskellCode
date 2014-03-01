@@ -1,6 +1,6 @@
 import Data.List
 
-
+{-- this is not the most efficient method ! --}
 
 
 num2Digits :: (Integral a) => a -> [a]
@@ -21,18 +21,23 @@ cubes :: (Integral a) => [[a]]
 cubes = map num2Digits $ map (^3) [1..]
 
 
-candidates = map (\x -> map digits2Num x) $ [l | a <- cubes,
+candidates =  map (\x -> map digits2Num x) [l | a <- cubes,
     let cubes1 = (tail $ dropWhile (/= a) cubes),
     let alen = length a,
     b <- (takeWhile (\x  -> length x == alen) cubes1),
+    let a' = sort a,
+    let b' = sort b,
+    a' == b',
     let cubes2 = (tail $ dropWhile (/= b) cubes1),
     c <- (takeWhile (\x  -> length x == alen) cubes2),
+    let c' = sort c,
+    c' == a',
     let cubes3 = (tail $ dropWhile (/= c) cubes2),
     d <- (takeWhile (\x  -> length x == alen) cubes3),
+    let d' = sort d,
+    d' == a',
     let cubes4 = (tail $ dropWhile (/= d) cubes3),
     e <- (takeWhile (\x  -> length x == alen) cubes4),
-    let l = [a,b,c,d,e],
-    (length $ nub $ map length $ map (filter (==0)) l) == 1,
-    (length $ nub $ map sum l) == 1,
-    (length $ nub $ map product $ map (filter (/=0)) l) == 1
-    ]
+    let e' = sort e,
+    e' == a',
+    let l = [a,b,c,d,e]]
