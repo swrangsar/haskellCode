@@ -20,7 +20,7 @@ get dinPhiloMac.c for mac version */
 pthread_mutex_t mutex;
 
 int state[N];
-sem_t *forks[N];
+sem_t forks[N];
 
 
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&mutex, NULL);
     for (i=0; i < N; i++) {
-        rc = sem_init(forks[i], 0 , 0);
+        rc = sem_init(&forks[i], 0 , 0);
         if (rc) {
             fprintf(stderr, "Error creating semaphore: %d\n", i);
             exit(EXIT_FAILURE);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     
     pthread_mutex_destroy(&mutex);
     for (i=0; i < N; i++) {
-        sem_destroy(forks[i]);
+        sem_destroy(&forks[i]);
     }
     
     printf("Main: program completed. Exiting.\n");
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 void test(int i)
 {
     if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
-        sem_post(forks[i]);
+        sem_post(&forks[i]);
     }
 }
 
@@ -98,7 +98,7 @@ void take_forks(int i)
     state[i] = HUNGRY;
     test(i);
     pthread_mutex_unlock(&mutex);
-    sem_wait(forks[i]);
+    sem_wait(&forks[i]);
 }
 
 
