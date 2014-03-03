@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&mutex, NULL);
     for (i=0; i < N; i++) {
-        sem_init(forks[i], 0 , 0);
-        if (forks[i]) {
+        rc = sem_init(forks[i], 0 , 0);
+        if (rc) {
             fprintf(stderr, "Error creating semaphore: %s\n", strerror(errno));
             exit(EXIT_FAILURE);
         }
