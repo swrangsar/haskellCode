@@ -106,7 +106,9 @@ void *philosopher(void *threadid)
     while (1) {
         printf("Philosopher #%ld is thinking.\n", i);
         take_forks(i);
-        printf("Philosopher #%ld is eating.\n", i);
+        printf("Philosopher #%ld started eating.\n", i);
+        usleep(2000000);
+        printf("Philosopher #%ld is done eating.\n", i);
         put_forks(i);
     }    
     pthread_exit(NULL);
