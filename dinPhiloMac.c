@@ -85,6 +85,10 @@ int main(int argc, char *argv[])
 void test(int i)
 {
     if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
+        state[i] = EATING;
+        sleep(2);
+        printf("Philosopher %d takes fork %d and %d\n", i+1, i, i+1);
+        printf("Philosopher %d is Eating\n", i+1);
         sem_post(forks[i]);
     }
 }
@@ -93,9 +97,11 @@ void take_forks(int i)
 {
     pthread_mutex_lock(&mutex);
     state[i] = HUNGRY;
+    printf("Philosopher %d is Hungry\n", i+1);
     test(i);
     pthread_mutex_unlock(&mutex);
     sem_wait(forks[i]);
+    sleep(1);
 }
 
 
@@ -103,42 +109,24 @@ void put_forks(int i)
 {
     pthread_mutex_lock(&mutex);
     state[i] = THINKING;
+    printf("Philosopher %d is Eating\n", i+1);
     test(LEFT);
     test(RIGHT);
-    printf("Philosopher #%d put forks.\n", i);
+    printf("Philosopher %d is putting fork %d and %d down\n", i+1, i, i+1);
+    printf("Philosopher %d thinking\n", i+1);
     pthread_mutex_unlock(&mutex);
 }
 
-void think(int i)
-{
-    int c = 0;
-    state[i] = THINKING;
-    while (c++ < N) {
-        printf("Philosopher #%d is thinking.\n", i);
-        usleep(100000);
-    }
-}
-
-
-void eat(int i)
-{
-    int c = 0;
-    while (c++ < N) {
-        printf("Philosopher #%d is eating.\n", i);
-        usleep(100000);
-    }
-}
 
 void *philosopher(void *threadid)
 {
     int i;
-    i = (int)threadid;
+    i = (long)threadid;
     
     while (1) {
-        think(i);
+        sleep(1);
         take_forks(i);
-        printf("Philosopher #%d took forks.\n", i);
-        eat(i);
+        sleep(0);
         put_forks(i);
     }    
     pthread_exit(NULL);
