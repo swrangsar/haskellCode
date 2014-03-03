@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     for (i=0; i < N; i++) {
         rc = sem_init(forks[i], 0 , 0);
         if (rc) {
-            fprintf(stderr, "Error creating semaphore: %s\n", strerror(errno));
+            fprintf(stderr, "Error creating semaphore: %d\n", i);
             exit(EXIT_FAILURE);
         }
     }
