@@ -1,6 +1,3 @@
-/* linux version 
-get dinPhiloMac.c for mac version */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -21,7 +18,7 @@ pthread_mutex_t mutex;
 
 int state[N];
 sem_t *forks[N];
-
+const char *semname[N] = {"sem0", "sem1", "sem2", "sem3", "sem4"};
 
 
 void take_forks(int i);
@@ -48,9 +45,9 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&mutex, NULL);
     for (i=0; i < N; i++) {
-        sem_init(forks[i], 0 , 0);
-        if (forks[i]) {
-            fprintf(stderr, "Error creating semaphore: %s\n", strerror(errno));
+        forks[i] = sem_open(semname[i], O_CREAT, 0777, 0);
+        if (forks[i] == SEM_FAILED) {
+            fprintf(stderr, "Error creating semaphore %s:%s\n", semname[i], strerror(errno));
             exit(EXIT_FAILURE);
         }
     }
@@ -77,7 +74,7 @@ int main(int argc, char *argv[])
     
     pthread_mutex_destroy(&mutex);
     for (i=0; i < N; i++) {
-        sem_destroy(forks[i]);
+        sem_unlink(semname[i]);
     }
     
     printf("Main: program completed. Exiting.\n");
