@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include <semaphore.h>
 
 #define N   5   /* number of philosophers */
@@ -16,7 +18,7 @@ pthread_mutex_t mutex;
 
 int state[N];
 sem_t *forks[N];
-const char semname[][N] = {"sem0", "sem1", "sem2", "sem3", "sem4"};
+const char *semname[N] = {"sem0", "sem1", "sem2", "sem3", "sem4"};
 
 
 void take_forks(int i);
@@ -43,7 +45,11 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&mutex, NULL);
     for (i=0; i < N; i++) {
-        forks[i] = sem_open(semname[i], O_CREAT);
+        forks[i] = sem_open(semname[i], O_CREAT, 0777, 0);
+        if (forks[i] == SEM_FAILED) {
+            fprintf(stderr, "Error creating semaphore %s:%s\n", semname[i], strerror(errno));
+            exit(EXIT_FAILURE);
+        }
     }
 
 
@@ -67,6 +73,9 @@ int main(int argc, char *argv[])
     }
     
     pthread_mutex_destroy(&mutex);
+    for (i=0; i < N; i++) {
+        sem_unlink(semname[i]);
+    }
     
     printf("Main: program completed. Exiting.\n");
     pthread_exit(NULL);
@@ -87,7 +96,6 @@ void take_forks(int i)
     test(i);
     pthread_mutex_unlock(&mutex);
     sem_wait(forks[i]);
-    printf("Philosopher #%d took forks.\n", i);
 }
 
 
@@ -123,12 +131,13 @@ void eat(int i)
 
 void *philosopher(void *threadid)
 {
-    long i;
+    int i;
     i = (int)threadid;
     
     while (1) {
         think(i);
         take_forks(i);
+        printf("Philosopher #%d took forks.\n", i);
         eat(i);
         put_forks(i);
     }    
