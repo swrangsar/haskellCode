@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <semaphore.h>
 
 #define N   5   /* number of philosophers */
@@ -14,12 +15,15 @@
 pthread_mutex_t mutex;
 
 int state[N];
-sem_t s[N];
+sem_t *forks[N];
+const char semname[][N] = {"sem0", "sem1", "sem2", "sem3", "sem4"};
 
 
-void take_forks(long i);
-void test(long i);
-void put_forks(long i);
+void take_forks(int i);
+void test(int i);
+void think(int i);
+void eat(int i);
+void put_forks(int i);
 void *philosopher(void *threadid);
 
 
@@ -39,7 +43,7 @@ int main(int argc, char *argv[])
     
     pthread_mutex_init(&mutex, NULL);
     for (i=0; i < N; i++) {
-        sem_init(&s[i], 0, 0);
+        forks[i] = sem_open(semname[i], O_CREAT);
     }
 
 
@@ -69,46 +73,63 @@ int main(int argc, char *argv[])
 }
 
 
-void test(long i)
+void test(int i)
 {
     if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
-        sem_post(&s[i]);
+        sem_post(forks[i]);
     }
 }
 
-void take_forks(long i)
+void take_forks(int i)
 {
     pthread_mutex_lock(&mutex);
     state[i] = HUNGRY;
     test(i);
     pthread_mutex_unlock(&mutex);
-    sem_wait(&s[i]);
-    printf("Philosopher #%ld took forks.\n", i);
+    sem_wait(forks[i]);
+    printf("Philosopher #%d took forks.\n", i);
 }
 
 
-void put_forks(long i)
+void put_forks(int i)
 {
     pthread_mutex_lock(&mutex);
     state[i] = THINKING;
     test(LEFT);
     test(RIGHT);
-    printf("Philosopher #%ld put forks.\n", i);
+    printf("Philosopher #%d put forks.\n", i);
     pthread_mutex_unlock(&mutex);
 }
 
+void think(int i)
+{
+    int c = 0;
+    state[i] = THINKING;
+    while (c++ < N) {
+        printf("Philosopher #%d is thinking.\n", i);
+        usleep(100000);
+    }
+}
+
+
+void eat(int i)
+{
+    int c = 0;
+    while (c++ < N) {
+        printf("Philosopher #%d is eating.\n", i);
+        usleep(100000);
+    }
+}
 
 void *philosopher(void *threadid)
 {
     long i;
-    i = (long)threadid;
+    i = (int)threadid;
     
     while (1) {
-        printf("Philosopher #%ld is thinking.\n", i);
+        think(i);
         take_forks(i);
-        printf("Philosopher #%ld started eating.\n", i);
-        usleep(2000000);
-        printf("Philosopher #%ld is done eating.\n", i);
+        eat(i);
         put_forks(i);
     }    
     pthread_exit(NULL);
