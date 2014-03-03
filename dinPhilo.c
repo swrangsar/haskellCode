@@ -135,7 +135,7 @@ void eat(int i)
 void *philosopher(void *threadid)
 {
     int i;
-    i = (int)threadid;
+    i = (long)threadid;
     
     while (1) {
         think(i);
