@@ -45,13 +45,13 @@ int main(int argc, char *argv[])
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
     
     for (i=0; i < N; i++) {
-        forks[i] = sem_open(semname[i], O_CREAT, 0777, 0);
+        forks[i] = sem_open(semname[i], O_CREAT | O_EXCL, 0777, 0);
         if (forks[i] == SEM_FAILED) {
             fprintf(stderr, "Error creating semaphore %s:%s\n", semname[i], strerror(errno));
             exit(EXIT_FAILURE);
         }
     }
-    mutex = sem_open(semmutex, O_CREAT, 0777, 1);
+    mutex = sem_open(semmutex, O_CREAT | O_EXCL, 0777, 1);
     if (mutex == SEM_FAILED) {
         fprintf(stderr, "Error creating semaphore %s:%s\n", semmutex, strerror(errno));
         exit(EXIT_FAILURE);
