@@ -1,3 +1,8 @@
+/* linux version; posix semaphores; unnamed semaphores */
+
+/* gcc dinPhiloUnnamed.c -o dinPhiloUnnamed -Wall -pthread -lrt */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -5,6 +10,8 @@
 #include <errno.h>
 #include <string.h>
 #include <semaphore.h>
+#include <sys/types.h>
+
 
 #define N   5   /* number of philosophers */
 #define LEFT    (i+N-1)%N
@@ -14,12 +21,9 @@
 #define EATING      2
 
 
-sem_t *mutex;
-
 int state[N];
-sem_t *forks[N];
-const char *semmutex = "Mtex";
-const char *semname[N] = {"sem0", "sem1", "sem2", "sem3", "sem4"};
+sem_t mutex;
+sem_t forks[N];
 
 
 void take_forks(int i);
@@ -45,15 +49,15 @@ int main(int argc, char *argv[])
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
     
     for (i=0; i < N; i++) {
-        forks[i] = sem_open(semname[i], O_CREAT, 0777, 0);
-        if (forks[i] == SEM_FAILED) {
-            fprintf(stderr, "Error creating semaphore %s:%s\n", semname[i], strerror(errno));
+        rc = sem_init(&forks[i], 0, 0);
+        if (rc) {
+            fprintf(stderr, "Error creating semaphore: %s\n", strerror(errno));
             exit(EXIT_FAILURE);
         }
     }
-    mutex = sem_open(semmutex, O_CREAT, 0777, 1);
-    if (mutex == SEM_FAILED) {
-        fprintf(stderr, "Error creating semaphore %s:%s\n", semmutex, strerror(errno));
+    rc = sem_init(&mutex, 0, 1);
+    if (rc) {
+        fprintf(stderr, "Error creating semaphore: %s\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
 
@@ -77,9 +81,9 @@ int main(int argc, char *argv[])
     }
     
     for (i=0; i < N; i++) {
-        sem_unlink(semname[i]);
+        sem_destroy(&forks[i]);
     }
-    sem_unlink(semmutex);
+    sem_destroy(&mutex);
     
     printf("Main: program completed. Exiting.\n");
     pthread_exit(NULL);
@@ -93,31 +97,31 @@ void test(int i)
         sleep(2);
         printf("Philosopher %d takes fork %d and %d\n", i+1, LEFT+1, i+1);
         printf("Philosopher %d is Eating\n", i+1);
-        sem_post(forks[i]);
+        sem_post(&forks[i]);
     }
 }
 
 void take_forks(int i)
 {
-    sem_wait(mutex);
+    sem_wait(&mutex);
     state[i] = HUNGRY;
     printf("Philosopher %d is Hungry\n", i+1);
     test(i);
-    sem_post(mutex);
-    sem_wait(forks[i]);
+    sem_post(&mutex);
+    sem_wait(&forks[i]);
     sleep(1);
 }
 
 
 void put_forks(int i)
 {
-    sem_wait(mutex);
+    sem_wait(&mutex);
     state[i] = THINKING;
     printf("Philosopher %d is putting fork %d and %d down\n", i+1, LEFT+1, i+1);
     printf("Philosopher %d is Thinking\n", i+1);
     test(LEFT);
     test(RIGHT);
-    sem_post(mutex);
+    sem_post(&mutex);
 }
 
 

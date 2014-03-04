@@ -80,8 +80,10 @@ int main(int argc, char *argv[])
     }
     
     for (i=0; i < N; i++) {
+        sem_close(forks[i]);
         sem_unlink(semname[i]);
     }
+    sem_close(mutex);
     sem_unlink(semmutex);
     
     printf("Main: program completed. Exiting.\n");
