@@ -116,10 +116,10 @@ void put_forks(int i)
 {
     sem_wait(mutex);
     state[i] = THINKING;
-    test(LEFT);
-    test(RIGHT);
     printf("Philosopher %d is putting fork %d and %d down\n", i+1, LEFT+1, i+1);
     printf("Philosopher %d is Thinking\n", i+1);
+    test(LEFT);
+    test(RIGHT);
     sem_post(mutex);
 }
 
